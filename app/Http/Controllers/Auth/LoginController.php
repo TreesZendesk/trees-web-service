@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Auth;
 use JWTAuth;
+use Carbon\Carbon;
 use App\Employee;
 
 class LoginController extends Controller
@@ -57,12 +58,12 @@ class LoginController extends Controller
                 return response()->json(['errors' => 'error creating a token'], 500);
         }
 
-        return response()->json(['status' => 'success', 'token_type' => 'bearer' ,'access_token' => $token, "expires_in" => config('jwt.ttl') * 60, 'user' => $employee], 200);
+        return response()->json(['status' => 'success', 'token_type' => 'bearer' ,'access_token' => $token, "expires_in" =>  Carbon::now()->addSeconds(config('jwt.ttl')*60)->diffForHumans(), 'user' => $employee], 200);
 
     }
 
     public function logout(Request $request) {
-      
+        
       return ['status' => "success", 'message' => "You have succesfully logout"];
     }
 }
