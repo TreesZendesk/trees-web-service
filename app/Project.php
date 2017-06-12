@@ -16,6 +16,8 @@ class Project extends Model
 
     protected $primaryKey = 'project_number';
 
+    public $incrementing = false;
+
     public function getTotalDistanceAttribute($value)
     {
         return $this->attributes['standard_km_from'] + $this->attributes['standard_km_to'];

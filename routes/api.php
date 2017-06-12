@@ -22,7 +22,7 @@ Route::group(['prefix' => 'v1'], function() {
 		$projects = Project::all();
 		$customers = Customer::all();
 
-		$lists = ['status' => 'success','projects' => $projects, 'customers' => $customers];
+		$lists = ['status' => 'success','projects' => $projects->toArray(), 'customers' => $customers->toArray()];
 		return response()->json($lists, 200);
 	});
 	Route::post('/login', 'Auth\LoginController@login')->middleware('guest');
