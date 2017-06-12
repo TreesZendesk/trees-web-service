@@ -16,6 +16,8 @@ class Customer extends Model
 
     protected $primaryKey = 'customer_code';
 
+    public $incrementing = false;
+
     public function getTotalDistanceAttribute($value)
     {
         return $this->attributes['standard_km_from'] + $this->attributes['standard_km_to'];
