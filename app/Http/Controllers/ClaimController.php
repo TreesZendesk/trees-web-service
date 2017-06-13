@@ -80,7 +80,7 @@ class ClaimController extends Controller
 
 		$claim_header = ClaimHeader::where('employee_number', Auth::user()->employee_number)->where('trx_id', $trx_id)->first();
 		if (!$claim_header) {
-			return response()->json([ "status" => 'error', 'errors' => "unauthorize"], 401);
+			return response()->json([ "status" => 'error', 'message' => "claim header with that trx_id not found"], 401);
 		}
 
 		$details = $claim_header->details()->createMany($data);
@@ -92,3 +92,9 @@ class ClaimController extends Controller
 		return response()->json($response, 200);
 	}
 }
+
+
+
+//status 
+////status_code
+//message
