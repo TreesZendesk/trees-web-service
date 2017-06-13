@@ -63,7 +63,7 @@ class ClaimController extends Controller
 
 		$result = $claim_header->toArray();
 
-		if (count($data['claim_details']) > 0) {
+		if (isset($data['claim_details']) && count($data['claim_details']) > 0) {
 			$details = $claim_header->details()->createMany($data['claim_details']);
 			if (!$details) {
 				$result['errors'] = ["error" => "error creating details"];
@@ -80,7 +80,7 @@ class ClaimController extends Controller
 
 		$claim_header = ClaimHeader::where('employee_number', Auth::user()->employee_number)->where('trx_id', $trx_id)->first();
 		if (!$claim_header) {
-			return response()->json([ "status" => 'error', 'message' => "claim header with that trx_id not found"], 401);
+			return response()->json([ "status" => 'error', 'message' => "claim header with that trx_id not found or you don't have the privilege with that header"], 401);
 		}
 
 		$details = $claim_header->details()->createMany($data);
