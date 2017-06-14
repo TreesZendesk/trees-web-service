@@ -63,8 +63,7 @@ class LoginController extends Controller
     }
 
     public function logout(Request $request) {
-        
-      return ['status' => "success", 'message' => "You have succesfully logout"];
+      $user = JWTAuth::invalidate(JWTAuth::getToken());
+      return response()->json(['status' => "success", 'status_code' => 200,  'message' => "You have succesfully logout", 'user' => $user->user()], 200);
     }
 }
-

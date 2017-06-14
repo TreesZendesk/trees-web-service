@@ -6,6 +6,7 @@ use \JWTAuth as JWTAuth;
 use App\Customer;
 use App\Project;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,7 +23,7 @@ Route::group(['prefix' => 'v1'], function() {
 		$projects = Project::all();
 		$customers = Customer::all();
 
-		$lists = ['status' => 'success','projects' => $projects->toArray(), 'customers' => $customers->toArray()];
+		$lists = ['status' => 'success', 'status_code' => 200, 'projects' => $projects, 'customers' => $customers];
 		return response()->json($lists, 200);
 	});
 	Route::post('/login', 'Auth\LoginController@login')->middleware('guest');
@@ -32,9 +33,10 @@ Route::group(['prefix' => 'v1'], function() {
 		Route::post('claims/create_many', 'ClaimController@bulkCreate');
 		Route::post('claims/header', 'ClaimController@postHeader');
 		Route::post('claims/header/{trx_id}/details', 'ClaimController@postDetails');
-		Route::post('absence', 'AbsenceController@create');
+		Route::post('absences/create_many', 'AbsenceController@bulkCreate');
+		Route::post('absences', 'AbsenceController@create');
 
-		Route::get('user', function (Request $request) {
+		Route::get('/restricted/user', function (Request $request) {
 			return Auth::user();
 			//return $request->user();
 		});

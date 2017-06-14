@@ -45,35 +45,36 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         // If the request wants JSON (AJAX doesn't always want JSON)
-        if ($request->wantsJson() || $request->isJson()) {
+        if ($request->wantsJson() || $request->isJson() || true) {
             // Define the response
             $response = [
-            'status' => "error",
-            'message' => 'Sorry, something went wrong.'
+                'status' => "error",
+                'status_code' => 400,
+                'message' => 'Sorry, something went wrong.'
             ];
 
             // If the app is in debug mode
             // if (config('app.debug'))
             // {
                 // Add the exception class name, message and stack trace to response
+            $response['message'] = $exception->getMessage();
+            if (config('app.debug')) {
                 $response['exception'] = get_class($exception); // Reflection might be better here
-                $response['message'] = $exception->getMessage();
-                //$response['trace'] = $exception->getTrace();
+                $response['trace'] = $exception->getTrace();
+            }
             // }
-            // Default response of 400
-            $status = 400;
 
             // If this exception is an instance of HttpException
-            if ($exception instanceof HttpException)
+            if ($exception instanceof HttpException || get_class( $exception) == "Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException")
             {
                 // Grab the HTTP status code from the Exception
-                $status = $exception->getStatusCode();
+                return response()->json(['status' => 'error', 'status_code' => 404, 'message' => 'URL Not found'], $exception->getStatusCode());
+                //$status = $exception->getStatusCode();
             }
 
 
-
             // Return a JSON response with the response array and status code
-            return response()->json($response, $status);
+            return response()->json($response, $response['status_code']);
         }
 
         return parent::render($request, $exception);

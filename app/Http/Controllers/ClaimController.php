@@ -19,7 +19,7 @@ class ClaimController extends Controller
 		$data = $request->input('claim_headers');
 
 		if (!$data || !is_array($data)) {
-			return response()->json(['errors' => "invalid_request_body"], 400);
+			return response()->json(['status' => 'error', 'status_code' => 400, 'message' => "Invalid request body"], 400);
 		}
 
 		$result = [];
@@ -33,10 +33,10 @@ class ClaimController extends Controller
 
 			$result[$key] = $claim_header->toArray();
 			$result[$key]['claim_details'] = [];
- 
+
 			if (isset($header['claim_details']) && count($header['claim_details']) > 0) {
 				$details = $claim_header->details()->createMany($header['claim_details']);
-				
+
 				if (!$details) {
 					$result[$key]['errors'] = ["errors" => "error_creating_details"];
 				}
@@ -45,7 +45,7 @@ class ClaimController extends Controller
 
 		}
 
-		$response = ['status' => 'success', 'claim_headers' => $result];
+		$response = ['status' => 'success', 'status_code' => 200, 'claim_headers' => $result];
 		return response()->json($response, 200);
 	}
 
@@ -53,7 +53,7 @@ class ClaimController extends Controller
 		$data = $request->input('claim_header');
 
 		if (!$data || !is_array($data)) {
-			return response()->json(['status' => 'error', 'errors' => "invalid request body"], 400);
+			return response()->json(['status' => 'error', 'status_code' => 400, 'message' => "Invalid request body"], 400);
 		}
 
 		$claim_header = Auth::user()->claimHeaders()->create($data);
@@ -71,7 +71,7 @@ class ClaimController extends Controller
 			$result['claim_details'] = $details;
 		}
 
-		$response = ['status' => 'success', 'claims_headers' => $result];
+		$response = ['status' => 'success', 'status_code' => 200, 'claims_headers' => $result];
 		return response()->json($response, 200);
 	}
 
@@ -80,21 +80,21 @@ class ClaimController extends Controller
 
 		$claim_header = ClaimHeader::where('employee_number', Auth::user()->employee_number)->where('trx_id', $trx_id)->first();
 		if (!$claim_header) {
-			return response()->json([ "status" => 'error', 'message' => "claim header with that trx_id not found or you don't have the privilege with that header"], 401);
+			return response()->json([ "status" => 'error', 'status_code' => 400, 'message' => "Claim header with that trx_id not found or you don't have the privilege to add details on that header"], 401);
 		}
 
 		$details = $claim_header->details()->createMany($data);
 		if (!$details) {
-			return response()->json(["status" => 'error', 'errors' => 'unable_creating_details'], 400);
+			return response()->json(["status" => 'error','status_code' => 400, 'message' => 'Unable creating details'], 400);
 		}
 
-		$response = ['status' => 'success', 'claim_details' => $details];
+		$response = ['status' => 'success', 'status_code' => 200, 'claim_details' => $details];
 		return response()->json($response, 200);
 	}
 }
 
 
 
-//status 
+//status
 ////status_code
 //message
