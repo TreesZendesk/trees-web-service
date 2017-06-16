@@ -47,7 +47,7 @@ class LoginController extends Controller
         $employee = Employee::where('cell_no', $cell_no)->first();
 
         if (!$employee) {
-            return response()->json(['message' => 'no employee found', 'status' => 404], 404);
+            return response()->json(['message' => 'no employee found', 'status' => "error", 'status_code' => 404], 404);
         }
 
         try {
