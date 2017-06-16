@@ -52,13 +52,13 @@ class LoginController extends Controller
 
         try {
             if (!$token = JWTAuth::fromUser($employee)) {
-                return response()->json(['message' => 'unable to get the token', 'status' => 400], 400);
+                return response()->json(['status' => "error", 'status_code' => 400, 'message' => 'unable to get the token'], 400);
             }
         } catch (Exception $e) {
-                return response()->json(['errors' => 'error creating a token'], 500);
+                return response()->json(['status' => 'error', 'status_code' => 500, 'message' => 'error creating a token'], 500);
         }
 
-        return response()->json(['status' => 'success', 'token_type' => 'bearer' ,'access_token' => $token, "expires_in" =>  Carbon::now()->addSeconds(config('jwt.ttl')*60)->diffForHumans(), 'user' => $employee], 200);
+        return response()->json(['status' => 'success', "status_code" => 200, 'token_type' => 'bearer' ,'access_token' => $token, "expires_in" =>  Carbon::now()->addSeconds(config('jwt.ttl')*60)->diffForHumans(), 'user' => $employee], 200);
 
     }
 
