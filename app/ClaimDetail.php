@@ -15,6 +15,10 @@ class ClaimDetail extends Model
 
 	protected $primaryKey = 'trx_detail_id';
 
+	public function __construct($attrs = []) {
+		parent::__construct($attrs);
+	}
+
 	public function setTaxiTimeAttribute($value)
 	{
 		$this->attributes['taxi_time'] = Carbon::parse($value);

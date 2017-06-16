@@ -15,6 +15,12 @@ class ClaimHeader extends Model
 
 	protected $primaryKey = 'trx_id';
 
+	public function __construct($attrs = []) {
+		parent::__construct($attrs);
+
+		$this->attributes['creation_date'] = Carbon::now();
+	}
+
 	public function setClaimDateAttribute($value)
 	{
 		$this->attributes['claim_date'] = Carbon::parse($value);
@@ -23,11 +29,6 @@ class ClaimHeader extends Model
 	public function getClaimDateAttribute($value)
 	{
 		return $value->format('Y-m-d');
-	}
-
-	public function setCreationDateAttribute($value)
-	{
-		$this->attributes['creation_date'] = Carbon::parse($value);
 	}
 
 	public function getCreationDateAttribute($value)
