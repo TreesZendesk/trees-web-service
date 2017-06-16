@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Auth;
 
 class Absence extends Model
 {
@@ -15,6 +16,12 @@ class Absence extends Model
     public $fillable = ['abs_trx_id', 'date_from', 'date_to', 'project_number', 'employee_number', 'activity_status', 'created_by', 'creation_date', 'batch_id'];
 
     protected $primaryKey = 'abs_trx_id';
+
+    public function __construct($attrs = []) {
+        parent::__construct($attrs);
+        
+        $this->attributes['creation_date'] = Carbon::now();
+    }
 
 	public function setDateFromAttribute($value)
 	{
@@ -34,16 +41,6 @@ class Absence extends Model
 	public function getDateToAttribute($value)
 	{
 		return $value->format('Y-m-d');
-	}
-
-	public function setCreationDateAttribute($value)
-	{
-		$this->attributes['creation_date'] = Carbon::parse($value);
-	}
-
-	public function getCreationDateAttribute($value)
-	{
-		return $value->format('Y-m-d h:i:s');
 	}
 
 	public function employee() {
