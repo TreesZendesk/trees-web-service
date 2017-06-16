@@ -33,7 +33,7 @@ class ClaimHeader extends Model
 
 	public function getCreationDateAttribute($value)
 	{
-		return $value->format('Y-m-d h:i:s');
+		return $value->format('Y-m-d H:i:s');
 	}
 
 	function details() {

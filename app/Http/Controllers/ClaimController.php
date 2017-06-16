@@ -22,9 +22,17 @@ class ClaimController extends Controller
 			return response()->json(['status' => 'error', 'status_code' => 400, 'message' => "Invalid request body"], 400);
 		}
 
+		$rules = [
+            '*.claim_date' => 'required|date',
+            '*.activity_code' => 'required'
+        ];
+        $validator = Validator::make($data, $rules, $message);
+        if ($validator->fails()) {
+            return response()->json(["status" => "error", "status_code" => 400, "message" => $validator->errors()->first()], 400);
+        }
+
 		$result = [];
 		foreach ($data as $key => $header) {
-
 			$claim_header = Auth::user()->claimHeaders()->create($header);
 			if (!$claim_header) {
 				$result[$key] = ["errors" => "error_creating_claim_header"];
@@ -56,6 +64,15 @@ class ClaimController extends Controller
 			return response()->json(['status' => 'error', 'status_code' => 400, 'message' => "Invalid request body"], 400);
 		}
 
+		$rules = [
+            'claim_date' => 'required|date',
+            'activity_code' => 'required'
+        ];
+        $validator = Validator::make($data, $rules, $message);
+        if ($validator->fails()) {
+            return response()->json(["status" => "error", "status_code" => 400, "message" => $validator->errors()->first()], 400);
+        }
+
 		$claim_header = Auth::user()->claimHeaders()->create($data);
 		if (!$claim_header) {
 			return response()->json(["errors" => "error creating claim header"], 400);
@@ -77,6 +94,18 @@ class ClaimController extends Controller
 
 	function postDetails(Request $request, $trx_id) {
 		$data = $request->input('claim_details');
+
+		$rules = [
+            '*.taxi_from' => 'required',
+            '*.taxi_to' => 'required',
+			'*.taxi_time' => 'required',
+			'*.taxi_voucher_no' => 'required',
+			'*.taxi_amount' => 'required'
+        ];
+        $validator = Validator::make($data, $rules, $message);
+        if ($validator->fails()) {
+            return response()->json(["status" => "error", "status_code" => 400, "message" => $validator->errors()->first()], 400);
+        }
 
 		$claim_header = ClaimHeader::where('employee_number', Auth::user()->employee_number)->where('trx_id', $trx_id)->first();
 		if (!$claim_header) {

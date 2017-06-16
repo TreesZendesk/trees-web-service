@@ -15,6 +15,9 @@ class AbsenceController extends Controller
 
     function create(Request $request) {
         $rules = [
+            'absence.date_from' => 'required|date',
+            'absence.date_to' => 'required|date',
+            'absence.activity_status' => 'required',
             'absence.project_number' => 'nullable|exists:project_mst,project_number'
         ];
         $message = [
@@ -42,6 +45,9 @@ class AbsenceController extends Controller
         }
 
         $rules = [
+            '*.date_from' => 'required|date',
+            '*.date_to' => 'required|date',
+            '*.activity_status' => 'required',
             '*.project_number' => 'nullable|exists:project_mst,project_number'
         ];
         $message = [

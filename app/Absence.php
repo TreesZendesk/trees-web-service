@@ -8,7 +8,7 @@ use Auth;
 
 class Absence extends Model
 {
-    //
+
     protected $table = 'absence_trx';
 
     public $timestamps = false;
@@ -19,7 +19,7 @@ class Absence extends Model
 
     public function __construct($attrs = []) {
         parent::__construct($attrs);
-        
+
         $this->attributes['creation_date'] = Carbon::now();
     }
 
@@ -42,6 +42,10 @@ class Absence extends Model
 	{
 		return $value->format('Y-m-d');
 	}
+
+    public function getCreationDateAttribute($value) {
+        return $value->format('Y-m-d H:i:s');
+    }
 
 	public function employee() {
 		return $this->belongsTo('App\Employee', 'employee_number', 'employee_number');
