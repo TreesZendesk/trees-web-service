@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use App\ClaimHeader;
 use App\ClaimDetail;
 use Auth;
+use Validator;
 
 class ClaimController extends Controller
 {
@@ -24,9 +25,19 @@ class ClaimController extends Controller
 
 		$rules = [
             '*.claim_date' => 'required|date',
-            '*.activity_code' => 'required'
+            '*.activity_code' => 'required',
+			'*.toll_from' => 'nullable|integer',
+			'*.toll_to' => 'nullable|integer',
+			'*.milleage' => 'nullable|integer',
+			'*.parking' => 'nullable|integer',
+			'*.meal' => 'nullable|integer',
+			'*.claim_details.*.taxi_from' => 'sometimes|required',
+			'*.claim_details.*.taxi_to' => 'sometimes|required',
+			'*.claim_details.*.taxi_time' => 'sometimes|required|time',
+			'*.claim_details.*.taxi_voucher_no' => 'sometimes|required',
+			'*.claim_details.*.taxi_amount' => 'sometimes|required|integer'
         ];
-        $validator = Validator::make($data, $rules, $message);
+        $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
             return response()->json(["status" => "error", "status_code" => 400, "message" => $validator->errors()->first()], 400);
         }
@@ -65,10 +76,15 @@ class ClaimController extends Controller
 		}
 
 		$rules = [
-            'claim_date' => 'required|date',
-            'activity_code' => 'required'
+			'claim_date' => 'required|date',
+            'activity_code' => 'required',
+			'toll_from' => 'nullable|integer',
+			'toll_to' => 'nullable|integer',
+			'milleage' => 'nullable|integer',
+			'parking' => 'nullable|integer',
+			'meal' => 'nullable|integer',
         ];
-        $validator = Validator::make($data, $rules, $message);
+        $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
             return response()->json(["status" => "error", "status_code" => 400, "message" => $validator->errors()->first()], 400);
         }
@@ -98,18 +114,23 @@ class ClaimController extends Controller
 		$rules = [
             '*.taxi_from' => 'required',
             '*.taxi_to' => 'required',
-			'*.taxi_time' => 'required',
+			'*.taxi_time' => 'required|time',
 			'*.taxi_voucher_no' => 'required',
-			'*.taxi_amount' => 'required'
+			'*.taxi_amount' => 'required|integer'
         ];
-        $validator = Validator::make($data, $rules, $message);
+        $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
             return response()->json(["status" => "error", "status_code" => 400, "message" => $validator->errors()->first()], 400);
         }
 
-		$claim_header = ClaimHeader::where('employee_number', Auth::user()->employee_number)->where('trx_id', $trx_id)->first();
-		if (!$claim_header) {
-			return response()->json([ "status" => 'error', 'status_code' => 400, 'message' => "Claim header with that trx_id not found or you don't have the privilege to add details on that header"], 401);
+		try {
+			$claim_header = ClaimHeader::where('employee_number', Auth::user()->employee_number)->where('trx_id', $trx_id)->first();
+
+			if ($claim_header == false) {
+				return response()->json([ "status" => 'error', 'status_code' => 400, 'message' => "Claim header with that trx_id not found or you don't have the privilege to add details on that header"], 401);
+			}
+		} catch (Exception $e) {
+			return repsonse()->json(['status' => 'error', 'status_code' => 500, "message" => "Internal error"]);
 		}
 
 		$details = $claim_header->details()->createMany($data);

@@ -21,7 +21,7 @@ class AbsenceController extends Controller
             'absence.project_number' => 'nullable|exists:project_mst,project_number'
         ];
         $message = [
-            'absence.project_number.exists' => "Project number doesn't exist"
+            'absence.project_number.exists' => ":attribute value doesn't exist in Project"
         ];
         $validator = Validator::make($request->all(), $rules, $message);
         if ($validator->fails()) {
@@ -51,7 +51,7 @@ class AbsenceController extends Controller
             '*.project_number' => 'nullable|exists:project_mst,project_number'
         ];
         $message = [
-            '*.project_number.exists' => "Project number doesn't exist"
+            '*.project_number.exists' => ":attribute value doesn't exist in Project"
         ];
         $validator = Validator::make($data, $rules, $message);
         if ($validator->fails()) {

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Auth;
 use JWTAuth;
+use Validator;
 use Carbon\Carbon;
 use App\Employee;
 
@@ -43,6 +44,12 @@ class LoginController extends Controller
     }
 
     public function login(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'cell_no' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'status_code' => 400, 'message' => $validator->errors()->first()], 400);
+        }
         $cell_no = $request->input('cell_no');
         $employee = Employee::where('cell_no', $cell_no)->first();
 

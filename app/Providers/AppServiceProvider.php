@@ -13,7 +13,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->app['validator']->extend('time', function ($attribute, $value, $parameters)
+        {
+
+            //dd($attribute, $value, $parameters);
+            return strtotime($value) == true;
+        });
     }
 
     /**

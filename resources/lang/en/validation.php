@@ -88,6 +88,8 @@ return [
     'uploaded'             => 'The :attribute failed to upload.',
     'url'                  => 'The :attribute format is invalid.',
 
+    'time'                  => 'The :attribute is not in a valid time format',
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
