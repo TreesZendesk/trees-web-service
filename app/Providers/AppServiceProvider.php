@@ -15,7 +15,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app['validator']->extend('time', function ($attribute, $value, $parameters)
         {
-
             //dd($attribute, $value, $parameters);
             return strtotime($value) == true;
         });
