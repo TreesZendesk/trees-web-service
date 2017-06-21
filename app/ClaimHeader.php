@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Auth;
 
 class ClaimHeader extends Model
 {
@@ -18,6 +19,7 @@ class ClaimHeader extends Model
 	public function __construct($attrs = []) {
 		parent::__construct($attrs);
 
+		$this->attributes['created_by'] = isset(Auth::user()->employee_name) ? Auth::user()->employee_name : "";
 		$this->attributes['creation_date'] = Carbon::now();
 	}
 
