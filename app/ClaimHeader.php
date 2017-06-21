@@ -20,7 +20,7 @@ class ClaimHeader extends Model
 		parent::__construct($attrs);
 
 		$this->attributes['created_by'] = isset(Auth::user()->employee_name) ? Auth::user()->employee_name : "";
-		$this->attributes['creation_date'] = Carbon::now();
+		$this->attributes['creation_date'] = Carbon::now()->setTimezone("Asia/Jakarta");
 	}
 
 	public function setClaimDateAttribute($value)
